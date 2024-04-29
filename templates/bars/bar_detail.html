@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title_name %}
+	Детальнее о товаре {{ object.name }}
+{% endblock %}
+
+{% block content %}
+    <section class="py-5" xmlns="http://www.w3.org/1999/html">
+  <div class="container">
+    <div class="row gx-5">
+      <aside class="col-lg-6">
+        <div class="border rounded-4 mb-3 d-flex justify-content-center">
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image">
+            <img style="max-width: 100%; max-height: 200vh; margin: auto;" src="{{ object.image.url }}" />
+          </a>
+        </div>
+
+        <!-- thumbs-wrap.// -->
+        <!-- gallery-wrap .end// -->
+      </aside>
+      <main class="col-lg-6">
+        <div class="md-3">
+          <h4 class="title text-dark">
+            {{ object.name }}
+          </h4>
+        </div>
+          <div class="mb-3">
+            <span class="h5">{{ object.address }}</span>
+          </div>
+
+          <p>
+            {{ object.description }}
+          </p>
+
+          <div class="row">
+            <dt class="col-3"> <a href="{{ object.website }}">Перейти на сайт:</a></dt>
+            <dd class="col-9">
+            </dd>
+          <hr />
+
+              <p style="color: #69a889" >Средний рейтинг
+              {% if object.review_srednee %}
+                  {{ object.review_srednee }}
+              	{% else %}
+                  Без оценок
+              {% endif %}
+
+
+              </p>
+                {% if object.review_srednee >= 1 and object.review_srednee < 2  %}
+                <i class="fas fa-star fa-sm text-warning"><h3>★</h3></i>
+              {% elif  object.review_srednee >= 2 and object.review_srednee < 3  %}
+                    <i class="fas fa-star fa-sm text-warning"><h3>★★</h3></i>
+              {% elif  object.review_srednee >= 3 and object.review_srednee < 4 %}
+              <i class="fas fa-star fa-sm text-warning"><h3>★★★</h3></i>
+              {% elif  object.review_srednee >= 4 and object.review_srednee < 5  %}
+                    <i class="fas fa-star fa-sm text-warning"><h3>★★★★</h3></i>
+              {% elif  object.review_srednee >= 5 and object.review_srednee < 6  %}
+                    {% elif object.review_srednee < 1 %}
+                    <i class="fas fa-star fa-sm text-warning" ><h3>Оценок этого места нет</h3></i>
+          {% endif %}
+
+
+          </div>
+            {% if request.user.is_anonymous %}
+            	Авторизуйтесь что бы оставить комментарий и добавить бар в избранное
+
+                {% else %}
+                <form action="{% url 'add_to_favorites' object.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light border border-secondary py-2 icon-hover px-3">Добавить в избранное</button>
+                     </form>
+                <a href="{% url 'add_comment' object.pk %}" class="btn btn-light border border-secondary py-2 icon-hover px-3"> Добавить комментарий </a>
+            {% endif %}
+          </main>
+    </div>
+ </div>
+</section>
+
+    <section>
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-10 col-xl-8 text-center">
+      <h3 class="mb-4">Отзывы</h3>
+      <p class="mb-4 pb-2 mb-md-5 pb-md-0">
+        Отзывы наших пользователей об этом месте.
+      </p>
+    </div>
+  </div>
+
+  <div class="row text-center">
+      {% for review in bar.review_set.all %}
+    <div class="col-md-4 mb-0">
+      <div class="d-flex justify-content-center mb-4">
+        <img src="{{ review.user.avatar.url }}"
+          class="rounded-circle shadow-1-strong" width="130" height="130" />
+      </div>
+      <h5 class="mb-3">{{ review.user.user.username }}</h5>
+      <h6 class="text-primary mb-3">{{ review.user.user.email }}
+      </h6>
+      <p class="px-xl-3">
+
+        <i class="fas fa-quote-left pe-2"></i>{{ review.date  }}<br/>
+        <i class="fas fa-quote-left pe-2"></i>{{ review.comment  }}
+      </p>
+      <ul class="list-unstyled d-flex justify-content-center mb-0">
+          {% if review.rating == 1 %}
+              <li>
+              <i class="fas fa-star fa-sm text-warning"><h4>★</h4></i>
+            </li>
+              {% elif review.rating == 2 %}
+                <li>
+              <i class="fas fa-star fa-sm text-warning"><h4>★★</h4></i>
+            </li>
+              {% elif review.rating == 3 %}
+                <li>
+              <i class="fas fa-star fa-sm text-warning"><h4>★★★</h4></i>
+            </li>
+              {% elif review.rating == 4 %}
+                <li>
+              <i class="fas fa-star fa-sm text-warning"><h4>★★★★</h4></i>
+            </li>
+
+              {% elif review.rating == 5 %}
+                <li>
+                    <i class="fas fa-star fa-sm text-warning" ><h4>★★★★★</h4></i>
+            </li>
+          {% endif %}
+      </ul>
+    </div>
+      {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

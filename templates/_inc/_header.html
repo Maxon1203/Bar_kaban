@@ -1,0 +1,60 @@
+{#{% load default_style %}#}
+{% with active_style='nav-item nav-link link-body-emphasis active' passive_style='nav-item nav-link link-body-emphasis' %}
+<div class="container">
+  <header class="border-bottom lh-1 py-3">
+    <div class="row flex-nowrap justify-content-between align-items-center">
+      <div class="col-4 pt-1">
+      </div>
+      <div class="col-4 text-center">
+        <h3 class="blog-header-logo text-body-emphasis text-decoration-none" href="{% url 'main' %}">Барный кабанчик</h3>
+      </div>
+      <div class="col-4 d-flex justify-content-end align-items-center">
+
+          
+          {% if request.user.is_anonymous %}
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'regis_form' %}">Регистрация</a>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'auth_form' %}">Авторизация</a>
+         {% else %}
+              {{ request.user.username }}
+            <a href="{% url 'profile' request.user.pk %}" type="button" class="btn btn-outline-dark">Профиль</a>
+            <a href="{% url 'log out' %}" type="button" class="btn btn-outline-dark">Выход из аккаунта</a>
+          {% endif %}
+
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-scroller py-1 mb-3 border-bottom">
+    <nav class="nav nav-underline justify-content-between">
+      <a class="{% if current_page == 'bar_main' %}
+        {{ active_style }}
+        	{% else %}
+        	{{ passive_style }}
+      {% endif %}" href="{% url 'main' %}">Главная</a>
+      <a class="{% if current_page == 'bar_map' %}
+            {{ active_style }}
+        	{% else %}
+        	{{ passive_style }}
+      {% endif %}" href="{% url 'bar_map' %}">Карта баров</a>
+            <a class="{% if current_page == 'bar_fest' %}
+            {{ active_style }}
+        	{% else %}
+        	{{ passive_style }}
+      {% endif %}" href="{% url 'bar_fest' %}">Фестивали</a>
+      <a class="{% if current_page == 'bar_list' %}
+        {{ active_style }}
+        	{% else %}
+        	{{ passive_style }}
+      {% endif %}" href="{% url 'list_bar' %}">Список баров</a>
+      <a class="{% if current_page == 'bar_rating' %}
+        {{ active_style }}
+        	{% else %}
+        	{{ passive_style }}
+      {% endif %}" href="{% url 'bars_reating' %}">Топ бары за все время</a>
+
+    </nav>
+  </div>
+</div>
+
+
+{% endwith %}

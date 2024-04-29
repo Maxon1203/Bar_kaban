@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title_name %}
+    Авторизация
+{% endblock %}
+
+{% block content %}
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_div }}
+            <input type="submit" value="Войти">
+        </form>
+
+        <a href="{% url 'regis_form' %}">Зарегистрироваться</a>
+        <a href="{% url 'list_bar' %}">Назад</a>
+    </div>
+{% endblock %}

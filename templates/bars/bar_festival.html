@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title_name %}
+    Список баров
+{% endblock %}
+
+{% block header %}
+	{% include '_inc/_header.html'  with current_page='bar_fest' %}
+{% endblock %}
+
+{% block content %}
+    <div class="form-outline mb-4" data-mdb-input-init>
+        <form method="get" action="{% url 'bar_fest' %}">
+            {% csrf_token %}
+          <input type="text" id="search_query" name="search_query" placeholder="Поиск фестиваля по названию" class="form-control" id="search_query">
+        </form>
+    </div>
+
+  {% for object in object_list %}
+    <div class="card text-center">
+      <div class="card-header">
+        {{ object.date }}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ object.name }}</h5>
+        <p class="card-text">{{ object.description }}</p>
+        <a href="{{ object.website }}" class="btn btn-primary">Перейти на сайт</a>
+      </div>
+      <div class="card-footer text-body-secondary">
+         <a>{{ object.website }}</a>
+      </div>
+    </div>
+      <br>
+  {% endfor %}
+{% endblock %}

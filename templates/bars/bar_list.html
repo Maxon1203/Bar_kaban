@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title_name %}
+    Список баров
+{% endblock %}
+
+{% block header %}
+	{% include '_inc/_header.html'  with current_page='bar_list' %}
+{% endblock %}
+
+{% block content %}
+    <div class="form-outline mb-4" data-mdb-input-init>
+        <form method="get" action="{% url 'list_bar' %}">
+            {% csrf_token %}
+          <input type="text" id="search_query" name="search_query" placeholder="Поиск по названию или адресу бара" class="form-control" id="search_query">
+        </form>
+    </div>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for object in object_list %}
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ object.image.url }}" class="card-img-top" alt="...">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title">{{ object.name }}</h3>
+
+                    <p class="card-text flex-grow-1 overflow-hidden">{{ object.description }}</p>
+                    <form action="{% url 'add_to_favorites' object.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Добавить в избранное</button>
+                     </form>
+                    {% if object.review_srednee %}
+                        <h5>Оценка: {{ object.review_srednee }}</h5>
+                    {% else %}
+                          <h5>Оценка: Без оценок</h5>
+                  {% endif %}
+                    <div>
+                        {% if object.review_srednee >= 1 and object.review_srednee < 2  %}
+                            <i class="fas fa-star fa-sm text-warning"><h2>★</h2></i>
+                          {% elif  object.review_srednee >= 2 and object.review_srednee < 3  %}
+                                <i class="fas fa-star fa-sm text-warning"><h2>★★</h2></i>
+                          {% elif  object.review_srednee >= 3 and object.review_srednee < 4 %}
+                          <i class="fas fa-star fa-sm text-warning"><h2>★★★</h2></i>
+                          {% elif  object.review_srednee >= 4 and object.review_srednee < 5  %}
+                                <i class="fas fa-star fa-sm text-warning"><h2>★★★★</h2></i>
+                          {% elif  object.review_srednee >= 5 and object.review_srednee < 6  %}
+                                <i class="fas fa-star fa-sm text-warning"><h2>★★★★★</h2></i>
+                          {% elif object.review_srednee < 1 %}
+                                <i class="fas fa-star fa-sm text-warning" ><h3>Оценок этого места нет</h3></i>
+                      {% endif %}
+                    </div>
+
+                    <a type="button" href="{% url 'bar_detail' object.pk %}" class="btn btn-outline-dark mt-auto">Детальнее о баре {{ object.name }}</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

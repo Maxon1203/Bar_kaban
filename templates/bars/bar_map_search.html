@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+
+
+{% block header %}
+	{% include '_inc/_header.html'  with current_page='bar_map' %}
+{% endblock %}
+
+{% block content %}
+
+<body>
+
+    <div class="form-outline mb-4" data-mdb-input-init>
+      <input type="text" id="searchInput" placeholder="Поиск по названию или адресу бара" class="form-control" id="datatable-search-input">
+      <button type="button" onclick="searchBars()" class="btn btn-primary" data-mdb-ripple-init>Поиск</button>
+    </div>
+
+    <div id="map" style="width: 100%; height: 900px"></div>
+{#    <input type="text" id="searchInput" placeholder="Поиск по названию или адресу бара">#}
+{#    <button onclick="searchBars()">Искать</button>#}
+    <div id="barsData" style="display: none;">
+        {% for bar in bars %}
+            <div data-latitude="{{ bar.latitude }}" data-longitude="{{ bar.longitude }}"
+                 data-name="{{ bar.name }}" data-address="{{ bar.address }}" data-phone="{{ bar.phone }}" data-id="{{ bar.pk }}"
+                data-image="{{ bar.image.url }}"
+            ></div>
+        {% endfor %}
+    </div>
+
+    <script type="text/javascript">
+        var map; // Переменная для хранения объекта карты
+
+        ymaps.ready(function () {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userLatitude = position.coords.latitude;
+                var userLongitude = position.coords.longitude;
+
+                map = new ymaps.Map('map', {
+                    center: [userLatitude, userLongitude],
+                    zoom: 10
+                });
+
+                addMarkers(map);
+            });
+        });
+
+        function addMarkers(map) {
+            var barsDataElements = document.querySelectorAll("#barsData > div");
+
+            barsDataElements.forEach(function(element) {
+                var latitude = parseFloat(element.getAttribute("data-latitude"));
+                var longitude = parseFloat(element.getAttribute("data-longitude"));
+                var name = element.getAttribute("data-name");
+                var address = element.getAttribute("data-address");
+                var phone = element.getAttribute("data-phone");
+                var pk = parseInt(element.getAttribute("data-id"));
+
+                var placemark = new ymaps.Placemark([latitude, longitude], {
+                    balloonContentHeader: "<a href='bars/detail/"+ pk +"'>" + name + "</a>",
+                    balloonContentBody: address,
+                    balloonContentFooter: phone
+                });
+                map.geoObjects.add(placemark);
+            });
+        }
+
+        function searchBars() {
+            var query = document.getElementById("searchInput").value.toLowerCase();
+            var barsDataElements = document.querySelectorAll("#barsData > div");
+
+            map.geoObjects.removeAll(); // Очищаем карту от предыдущих маркеров
+
+            barsDataElements.forEach(function(element) {
+                var name = element.getAttribute("data-name").toLowerCase();
+                var address = element.getAttribute("data-address").toLowerCase();
+
+                if (name.includes(query) || address.includes(query)) {
+                    var latitude = parseFloat(element.getAttribute("data-latitude"));
+                    var longitude = parseFloat(element.getAttribute("data-longitude"));
+                    var phone = element.getAttribute("data-phone");
+
+                    var pk = parseInt(element.getAttribute("data-id"));
+                    var image = element.getAttribute("data-image");
+
+                    var placemark = new ymaps.Placemark([latitude, longitude], {
+                        balloonContentHeader: "<a href='bars/detail/"+ pk +"'>" + name + "</a>",
+                        balloonContentBody: address,
+                        balloonContentFooter: phone,
+
+                      });
+                    map.geoObjects.add(placemark);
+                }
+            });
+        }
+
+    </script>
+</body>
+{% endblock %}
+

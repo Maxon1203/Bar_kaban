@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title_name %}
+   Профиль
+{% endblock %}
+
+
+{% block content %}
+ <div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-3 py-4">
+
+                <div class="text-center">
+                    <img src="{{ user.customuser.avatar.url }}" width="100" class="rounded-circle">
+                </div>
+
+                <div class="text-center mt-3">
+                    <span class="bg-secondary p-1 px-4 rounded text-white">Гурман комбо</span>
+                    <h5 class="mt-2 mb-0">{{ user.username}}</h5>
+
+                    <div class="px-4 mt-1">
+                        <p class="fonts"> {{ user.email }}</p>
+                        <p class="fonts"> {{ user.password }}</p>
+                    </div>
+                        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary px-4">Редактировать профиль</a>
+                        <a href="{% url 'log out' %}" class="btn btn-primary px-4 ms-3">Выйти из аккаунта</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-4">
+                <div class="card-body">
+                    <h3 class="card-title" style="text-align: center">Избранные бары</h3>
+                        {% for bar in user.customuser.liked_bars.all %}
+                        <div class="card text-center">
+                              <div class="card-body">
+                                <h5 class="card-text">{{ bar.name }}</h5>
+                                <p class="card-text">{{ bar.description }}</p>
+                                <a href="{{ bar.website }}" class="btn btn-sm btn-outline-secondary">Перейти на сайт</a>
+                                <a href="{% url 'bar_detail' bar.pk %}" class="btn btn-sm btn-outline-secondary">Перейти к бару</a>
+                                <a href="{% url 'delete_to_favorites' bar.pk %}" class="btn btn-sm btn-outline-secondary">Удалить из избранного</a>
+                              </div>
+                              <div class="card-footer text-body-secondary">
+                                 <a>{{ bar.website }}</a>
+                              </div>
+                            </div>
+                      <br>
+                        {% endfor %}
+                </div>
+            </div>
+{% endblock %}

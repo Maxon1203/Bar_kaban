@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title_name %}
+    Регистрация
+{% endblock %}
+
+{% block content %}
+    <div>
+
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form.as_div }}
+    {#            <input type="submit" value="Зарегистрироваться">#}
+                <input type="submit" class="btn btn-outline-dark mt-auto" value="Зарегистрироваться"></input>
+
+             <a type="button" href="{% url 'auth_form'%}" class="btn btn-outline-dark mt-auto">Авторизоваться</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}
