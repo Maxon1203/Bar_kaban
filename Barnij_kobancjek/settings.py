@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+DATABASE_URL = "postgresql://postgres:IctCPbXGEddPtpjgNklzXSLhbDhAccgU@roundhouse.proxy.rlwy.net:39663/railway"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -75,17 +77,19 @@ WSGI_APPLICATION = 'Barnij_kobancjek.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#         'NAME': 'barnij_kobancjek',
+#         'USER': 'postgres',
+#         'PASSWORD': '123'
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        'NAME': 'barnij_kobancjek',
-        'USER': 'postgres',
-        'PASSWORD': '123'
-    }
+    'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
